@@ -1,9 +1,9 @@
 inmotion.apache
 =========
 
-[![Build Status](https://travis-ci.org/inmotionhosting/inmotion.apache.png?branch=master)](https://travis-ci.org/inmotionhosting/inmotion.apache)
+Modular Ansible Role for deploying and configuring Apache
 
-This role installs and configures Apache.
+[![Build Status](https://travis-ci.org/inmotionhosting/inmotion.apache.png?branch=master)](https://travis-ci.org/inmotionhosting/inmotion.apache)
 
 Requirements
 ------------
