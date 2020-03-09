@@ -1,0 +1,101 @@
+---
+- name: (Apache) Include os_family vars
+  include_vars: "{{ ansible_os_family }}.yml"
+  vars:
+    targets:
+      - Debian
+  when: ansible_os_family in targets
+
+- name: (Apache) Include UltraStack configuration
+  include: ultrastack.yml
+  when:
+    - use_ultrastack is defined
+    - use_ultrastack
+
+- name: (Apache) Set and sanitize Apache core facts
+  set_fact:
+    apache_name: >-
+      {{ apache_name
+      if apache_name is defined
+      and apache_name is string
+      and apache_name != 0
+      else "httpd" }}
+    apache_daemon: >-
+      {{ apache_daemon
+      if apache_daemon is defined
+      and apache_daemon is string
+      and apache_daemon != 0
+      else "httpd" }}
+
+    apache_user: >-
+      {{ apache_user
+      if apache_user is defined
+      and apache_user is string
+      and apache_user != 0
+      else "apache" }}
+    apache_group: >-
+      {{ apache_group
+      if apache_group is defined
+      and apache_group is string
+      and apache_group != 0
+      else "apache" }}
+
+    apache_port: >-
+      {{ apache_port
+      if apache_port is defined
+      and apache_port is number
+      and apache_port > 0
+      else 80 }}
+    apache_secure_port: >-
+      {{ apache_secure_port
+      if apache_secure_port is defined
+      and apache_secure_port is number
+      and apache_secure_port > 0
+      else 443 }}
+
+- name: (Apache) Set and sanitize Apache configuration facts
+  set_fact:
+    apache_config: >-
+      {{ apache_config
+      if apache_config is defined
+      and apache_config is string
+      and apache_config != 0
+      else "/etc/{{ apache_name }}/conf/{{ apache_name }}.conf" }}
+    apache_config_path: >-
+      {{ apache_config_path
+      if apache_config_path is defined
+      and apache_config_path is string
+      and apache_config_path != 0
+      else "/etc/{{ apache_name }}/conf.d" }}
+    apache_config_ports: >-
+      {{ apache_config_ports
+      if apache_config_ports is defined
+      and apache_config_ports is string
+      and apache_config_ports != 0
+      else "{{ apache_config_path }}/ssl.conf" }}
+    apache_config_site_path: >-
+      {{ apache_config_site_path
+      if apache_config_site_path is defined
+      and apache_config_site_path is string
+      and apache_config_site_path != 0
+      else "{{ apache_config_path }}" }}
+
+    apache_modules_path: >-
+      {{ apache_modules_path
+      if apache_modules_path is defined
+      and apache_modules_path is string
+      and apache_modules_path != 0
+      else "/etc/{{ apache_name }}/modules" }}
+    apache_modules_config_path: >-
+      {{ apache_modules_config_path
+      if apache_modules_config_path is defined
+      and apache_modules_config_path is string
+      and apache_modules_config_path != 0
+      else "/etc/{{ apache_name }}/conf.modules.d" }}
+
+    apache_packages: >-
+      {{ apache_packages
+      if apache_packages is defined
+      and apache_packages is iterable
+      and apache_packages | length > 0
+      else ["httpd", "httpd-tools", "mod_ssl"] }}

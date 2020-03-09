@@ -1,0 +1,104 @@
+---
+# tasks file for inmotion.ultrastack_apache
+
+- name: (Apache) Include facts
+  include: "facts.yml"
+
+- name: (Ubuntu) Update APT cache
+  apt:
+    force_apt_get: true
+    update_cache: true
+    cache_valid_time: "3600"
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: (Apache) Install Apache packages
+  package:
+    name: "{{ apache_packages }}"
+    state: present
+
+- name: (Apache) Ensure Apache group exists
+  group:
+    name: "{{ apache_user }}"
+    state: present
+
+- name: (Apache) Ensure Apache user exists
+  user:
+    name: "{{ apache_user }}"
+    state: present
+    group: "{{ apache_group }}"
+
+- name: (Apache) Assign Apache to specified user in config
+  lineinfile:
+    path: "{{ apache_config }}"
+    regexp: "^User "
+    line: "User {{ apache_user }}"
+
+- name: (Apache) Assign Apache to specified group in config
+  lineinfile:
+    path: "{{ apache_config }}"
+    regexp: "^Group "
+    line: "Group {{ apache_group }}"
+
+- name: (RedHat) Bind Apache to specified HTTP port
+  lineinfile:
+    path: "{{ apache_config }}"
+    regexp: "^Listen 80$"
+    line: "Listen {{ apache_port }}"
+  when: ansible_os_family == "RedHat"
+
+- name: (RedHat) Bind Apache to specified HTTPS port
+  lineinfile:
+    path: "{{ apache_config_ports }}"
+    regexp: "^Listen 443 https$"
+    line: "Listen {{ apache_secure_port }} https"
+  when: ansible_os_family == "RedHat"
+
+- name: (Debian) Bind Apache to specified HTTP port
+  lineinfile:
+    path: "{{ apache_config_ports }}"
+    regexp: "^Listen 80$"
+    line: "Listen {{ apache_port }}"
+  when: ansible_os_family == "Debian"
+
+- name: (Debian) Bind Apache to specified HTTPS port
+  lineinfile:
+    path: "{{ apache_config_ports }}"
+    regexp: "^\tListen 443$"
+    line: "\tListen {{ apache_secure_port }}"
+  when: ansible_os_family == "Debian"
+
+- name: (Apache) Comment out welcome.conf
+  copy:
+    src: welcome.conf
+    dest: "{{ apache_config_site_path }}/welcome.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - restart apache
+
+- name: (Debian) Remove default virtualhost
+  file:
+    path: "{{ apache_config_site_path }}/000-default.conf"
+    state: absent
+  when: ansible_os_family == "Debian"
+
+- name: (Debian) Enable Apache modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+    ignore_configcheck: true
+  notify:
+    - restart apache
+  when: ansible_os_family == "Debian"
+  with_items:
+    - proxy_fcgi
+    - rewrite
+    - ssl
+
+- name: (Apache) Start and enable apache service
+  service:
+    name: "{{ apache_daemon }}"
+    state: started
+    enabled: true
