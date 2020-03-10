@@ -62,10 +62,10 @@
   when: ansible_os_family == "Debian"
 
 - name: (Debian) Bind Apache to specified HTTPS port
-  lineinfile:
+  replace:
     path: "{{ apache_config_ports }}"
     regexp: "^\tListen 443$"
-    line: "\tListen {{ apache_secure_port }}"
+    replace: "\tListen {{ apache_secure_port }}"
   when: ansible_os_family == "Debian"
 
 - name: (Apache) Comment out welcome.conf
