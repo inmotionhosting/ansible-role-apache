@@ -89,15 +89,17 @@
     name: "{{ item }}"
     state: present
     ignore_configcheck: true
+  failed_when: apache_modules.rc > 0
   notify:
     - restart apache
+  register: apache_modules
   when: ansible_os_family == "Debian"
   with_items:
     - proxy_fcgi
     - rewrite
     - ssl
 
-- name: (Apache) Start and enable apache service
+- name: (Apache) Start and enable Apache service
   service:
     name: "{{ apache_daemon }}"
     state: started
