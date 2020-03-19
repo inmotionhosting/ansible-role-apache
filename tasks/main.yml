@@ -89,7 +89,9 @@
     name: "{{ item }}"
     state: present
     ignore_configcheck: true
-  failed_when: apache_modules.rc > 0
+  failed_when: 
+    - apache_modules.rc is defined
+    - apache_modules.rc > 0
   notify:
     - restart apache
   register: apache_modules
