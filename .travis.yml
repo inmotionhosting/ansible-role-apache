@@ -5,14 +5,14 @@ services:
 
 env:
   global:
-    - ROLE_NAME="inmotionhosting.apache"
+    - ROLE_NAME: "apache"
   matrix:
-    - MOLECULE_DISTRO="centos-7"
-    - MOLECULE_DISTRO="centos-8"
-    - MOLECULE_DISTRO="debian-9"
-    - MOLECULE_DISTRO="debian-10"
-    - MOLECULE_DISTRO="ubuntu-16.04"
-    - MOLECULE_DISTRO="ubuntu-18.04"
+    - MOLECULE_DISTRO: "centos-7"
+    - MOLECULE_DISTRO: "centos-8"
+    - MOLECULE_DISTRO: "debian-9"
+    - MOLECULE_DISTRO: "debian-10"
+    - MOLECULE_DISTRO: "ubuntu-16.04"
+    - MOLECULE_DISTRO: "ubuntu-18.04"
 
 addons:
   apt:
@@ -20,9 +20,12 @@ addons:
       - python3-pip
 
 install:
-  - pip install ansible docker molecule[docker] testinfra
-  - ansible --version
-  - molecule --version
+  - pip install ansible ansible-lint docker molecule[docker] testinfra yamllint
+
+before_script:
+  - cd ../
+  - mv ansible-role-$ROLE_NAME inmotionhosting.$ROLE_NAME
+  - cd inmotionhosting.$ROLE_NAME
 
 script:
   - molecule test

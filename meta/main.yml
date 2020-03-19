@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: apache
   author: inmotionhosting
   description: Modular Ansible Role for deploying and configuring Apache
   company: InMotion Hosting
