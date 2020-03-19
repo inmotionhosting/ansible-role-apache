@@ -1,9 +1,9 @@
-inmotion.apache
+inmotionhosting.apache
 =========
 
 Modular Ansible Role for deploying and configuring Apache
 
-[![Build Status](https://travis-ci.org/inmotionhosting/inmotion.apache.png?branch=master)](https://travis-ci.org/inmotionhosting/inmotion.apache)
+[![Build Status](https://travis-ci.org/inmotionhosting/apache.png?branch=master)](https://travis-ci.org/inmotionhosting/apache)
 
 Requirements
 ------------
@@ -33,6 +33,7 @@ Role Variables
 
 Dependencies
 ------------
+
 None.
 
 Example Playbook
@@ -40,7 +41,7 @@ Example Playbook
 
     - hosts: www
       roles:
-         - role: inmotion.apache
+         - role: inmotionhosting.apache
 
 License
 -------
