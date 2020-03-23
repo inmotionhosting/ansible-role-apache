@@ -3,33 +3,29 @@ inmotionhosting.apache
 
 Modular Ansible Role for deploying and configuring Apache
 
-[![Build Status](https://travis-ci.org/inmotionhosting/apache.png?branch=master)](https://travis-ci.org/inmotionhosting/apache)
+[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-apache.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-apache)
 
 Requirements
 ------------
 
-* RHEL/CentOS 7.x, 8.x
-* Debian 9.x, 10.x
-* Ubuntu 16.04 LTS, 18.04 LTS
+* CentOS 7.x or later
+* Debian 8 or later
+* Ubuntu 16.04.x LTS or later
 
 Role Variables
 --------------
+In this role, we load the defaults and then modify them as needed to
+support other platforms.
 
 ### Defaults
-| Variable | Definition |
-| -------- | ---------- |
-| apache_user  | The user Apache will run as
-| apache_group | The group the Apache user will be assigned to
+This role uses [defaults/main.yml](defaults/main.yml) to declare
+"global" variables using CentOS 7.x as our base.  This allows defining
+a core set of variables that can be trivially modified.
 
 ### Vars
-| Variable | Definition |
-| -------- | ---------- |
-| apache_name         | The name of the Apache package
-| apache_daemon       | The name of the Apache service daemon
-| apache_config       | The Full path and name of the Apache configuration file
-| apache_config_path  | The path of the Apache configuration directory
-| apache_modules_path | The path of the Apache modules directory
-| apache_packages     | The packages to install for Apache
+This role uses [vars/](vars/) to handle variances between operating
+systems and their derivatives, which are loaded and sanitized in
+[tasks/facts.yml](tasks/facts.yml), including handling any errata.
 
 Dependencies
 ------------
