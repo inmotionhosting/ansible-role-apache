@@ -14,18 +14,22 @@ Requirements
 
 Role Variables
 --------------
-In this role, we load the defaults and then modify them as needed to
-support other platforms.
 
-### Defaults
-This role uses [defaults/main.yml](defaults/main.yml) to declare
-"global" variables using CentOS 7.x as our base.  This allows defining
-a core set of variables that can be trivially modified.
-
-### Vars
-This role uses [vars/](vars/) to handle variances between operating
-systems and their derivatives, which are loaded and sanitized in
-[tasks/facts.yml](tasks/facts.yml), including handling any errata.
+| Variable | Description |
+| -------- | ----------- |
+| apache_name | Default: `httpd`
+| apache_daemon | Default: `httpd`
+| apache_user | Default: `apache`
+| apache_group | Default: `apache`
+| apache_port | Default: `80`
+| apache_secure_port | Default: `443`
+| apache_config | Default: `/etc/{{ apache_name }}/conf/{{ apache_name }}.conf`
+| apache_config_path | Default: `/etc/{{ apache_name }}/conf.d`
+| apache_config_ports | Default: `{{ apache_config_path }}/ssl.conf`
+| apache_config_site_path | Default: `{{ apache_config_path }}`
+| apache_modules_path | Default: `/etc/{{ apache_name }}/modules`
+| apache_modules_config_path | Default: `/etc/{{ apache_name }}/conf.modules.d`
+| apache_packages | The list of Apache packages to install
 
 Dependencies
 ------------
@@ -47,4 +51,4 @@ GPLv3
 Author Information
 ------------------
 
-InMotion Hosting
+[InMotion Hosting](https://inmotionhosting.com)
