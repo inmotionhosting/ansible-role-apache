@@ -12,6 +12,24 @@
     - use_ultrastack is defined
     - use_ultrastack
 
+- name: (Let's Encrypt) Add Apache to Let's Encrypt services
+  set_fact:
+    certbot_stop_services: "{{ certbot_stop_services + [apache_name] }}"
+  when:
+    - use_letsencrypt is defined
+    - use_letsencrypt
+    - certbot_stop_services is defined
+    - apache_name not in certbot_stop_services
+
+- name: (Let's Encrypt) Initialize Let's Encrypt services with Apache
+  set_fact:
+    certbot_stop_services:
+      - "{{ apache_name }}"
+  when:
+    - use_letsencrypt is defined
+    - use_letsencrypt
+    - certbot_stop_services is not defined
+
 - name: (Apache) Set and sanitize Apache core facts
   set_fact:
     apache_name: >-
