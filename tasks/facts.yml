@@ -6,7 +6,7 @@
       - Debian
   when: ansible_os_family in targets
 
-- name: (Apache) Include UltraStack configuration
+- name: (UltraStack) Include UltraStack configuration
   include: ultrastack.yml
   when:
     - use_ultrastack is defined

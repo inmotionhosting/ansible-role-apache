@@ -1,19 +1,22 @@
-inmotionhosting.apache
-=========
+[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-apache.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-apache) [![GPL-3.0 License](https://img.shields.io/github/license/inmotionhosting/ansible-role-apache.svg?color=blue)](https://github.com/inmotionhosting/ansible-role-apache/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/inmotionhosting/ansible-role-apache.svg)](https://github.com/inmotionhosting/ansible-role-apache/stargazers)
+
+# Ansible Role: Apache
 
 Modular Ansible Role for deploying and configuring Apache
 
-[![Build Status](https://travis-ci.org/inmotionhosting/ansible-role-apache.png?branch=master)](https://travis-ci.org/inmotionhosting/ansible-role-apache)
-
-Requirements
-------------
+## Requirements
 
 * CentOS 7.x or later
 * Debian 9 or later
-* Ubuntu 16.04.x LTS or later
+* Ubuntu 16.04 LTS or later
 
-Role Variables
---------------
+## Dependencies
+
+None.
+
+## Role Variables
+
+Available variables are listed below with their default values (you can also see `defaults/main.yml`)
 
 | Variable | Description |
 | -------- | ----------- |
@@ -31,24 +34,18 @@ Role Variables
 | apache_modules_config_path | Default: `/etc/{{ apache_name }}/conf.modules.d`
 | apache_packages | The list of Apache packages to install
 
-Dependencies
-------------
+## Example Playbook
 
-None.
+```yaml
+- hosts: www
+  roles:
+    - role: inmotionhosting.apache
+```
 
-Example Playbook
-----------------
-
-    - hosts: www
-      roles:
-         - role: inmotionhosting.apache
-
-License
--------
+## License
 
 GPLv3
 
-Author Information
-------------------
+## Author Information
 
 [InMotion Hosting](https://inmotionhosting.com)
