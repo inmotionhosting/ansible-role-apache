@@ -1,40 +1,39 @@
----
-# tasks file for inmotion.ultrastack_apache
+# tasks/main.yml
 
-- name: (Apache) Include facts
-  include: "facts.yml"
+- name: Include facts
+  include: facts.yml
 
 - name: (Ubuntu) Update APT cache
   apt:
     force_apt_get: true
-    update_cache: true
     cache_valid_time: "3600"
     state: present
+    update_cache: true
   when: ansible_distribution == "Ubuntu"
 
-- name: (Apache) Install Apache packages
+- name: Install Apache packages
   package:
     name: "{{ apache_packages }}"
     state: present
 
-- name: (Apache) Ensure Apache group exists
+- name: Ensure Apache group exists
   group:
     name: "{{ apache_user }}"
     state: present
 
-- name: (Apache) Ensure Apache user exists
+- name: Ensure Apache user exists
   user:
     name: "{{ apache_user }}"
     state: present
     group: "{{ apache_group }}"
 
-- name: (Apache) Assign Apache to specified user in config
+- name: Assign Apache to specified user in config
   lineinfile:
     path: "{{ apache_config }}"
     regexp: "^User "
     line: "User {{ apache_user }}"
 
-- name: (Apache) Assign Apache to specified group in config
+- name: Assign Apache to specified group in config
   lineinfile:
     path: "{{ apache_config }}"
     regexp: "^Group "
@@ -44,31 +43,31 @@
   lineinfile:
     path: "{{ apache_config }}"
     regexp: "^Listen 80$"
-    line: "Listen {{ apache_port }}"
+    line: "Listen {{ apache_port_http }}"
   when: ansible_os_family == "RedHat"
 
 - name: (RedHat) Bind Apache to specified HTTPS port
   lineinfile:
     path: "{{ apache_config_ports }}"
     regexp: "^Listen 443 https$"
-    line: "Listen {{ apache_secure_port }} https"
+    line: "Listen {{ apache_port_https }} https"
   when: ansible_os_family == "RedHat"
 
 - name: (Debian) Bind Apache to specified HTTP port
   lineinfile:
     path: "{{ apache_config_ports }}"
     regexp: "^Listen 80$"
-    line: "Listen {{ apache_port }}"
+    line: "Listen {{ apache_port_http }}"
   when: ansible_os_family == "Debian"
 
 - name: (Debian) Bind Apache to specified HTTPS port
   replace:
     path: "{{ apache_config_ports }}"
     regexp: "^\tListen 443$"
-    replace: "\tListen {{ apache_secure_port }}"
+    replace: "\tListen {{ apache_port_https }}"
   when: ansible_os_family == "Debian"
 
-- name: (Apache) Comment out welcome.conf
+- name: Comment out welcome.conf
   copy:
     src: welcome.conf
     dest: "{{ apache_config_site_path }}/welcome.conf"
@@ -92,8 +91,7 @@
   failed_when:
     - apache_modules.rc is defined
     - apache_modules.rc > 0
-  notify:
-    - restart apache
+  notify: restart apache
   register: apache_modules
   when: ansible_os_family == "Debian"
   with_items:
@@ -101,7 +99,7 @@
     - rewrite
     - ssl
 
-- name: (Apache) Start and enable Apache service
+- name: Start and enable Apache service
   service:
     name: "{{ apache_daemon }}"
     state: started
