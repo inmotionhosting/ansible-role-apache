@@ -1,0 +1,4 @@
+# vars/ultrastack.yml
+
+apache_port_http: 8080
+apache_port_https: 8443

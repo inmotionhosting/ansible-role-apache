@@ -1,5 +1,6 @@
----
+# handlers/main.yml
+
 - name: restart apache
   service:
-    name: '{{ apache_daemon }}'
+    name: "{{ apache_daemon }}"
     state: restarted

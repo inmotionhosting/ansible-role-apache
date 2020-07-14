@@ -1,20 +1,17 @@
----
-# defaults file for inmotion.ultrastack_apache
+# defaults/main.yml
 
-apache_name: httpd
 apache_daemon: httpd
-
-apache_user: apache
 apache_group: apache
+apache_name: httpd
+apache_user: apache
 
-apache_port: 80
-apache_secure_port: 443
+apache_port_http: 80
+apache_port_https: 443
 
 apache_config: /etc/{{ apache_name }}/conf/{{ apache_name }}.conf
 apache_config_path: /etc/{{ apache_name }}/conf.d
 apache_config_ports: "{{ apache_config_path }}/ssl.conf"
 apache_config_site_path: "{{ apache_config_path }}"
-
 apache_modules_path: /etc/{{ apache_name }}/modules
 apache_modules_config_path: /etc/{{ apache_name }}/conf.modules.d
 
@@ -22,3 +19,6 @@ apache_packages:
   - httpd
   - httpd-tools
   - mod_ssl
+
+use_letsencrypt: false
+use_ultrastack: false

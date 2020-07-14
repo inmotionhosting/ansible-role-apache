@@ -1,5 +1,0 @@
----
-- name: (UltraStack) Change Apache ports
-  set_fact:
-    apache_port: 8080
-    apache_secure_port: 8443

@@ -1,119 +1,121 @@
----
-- name: (Apache) Include os_family vars
+# tasks/facts.yml
+
+- name: Include os_family vars
   include_vars: "{{ ansible_os_family }}.yml"
   vars:
     targets:
       - Debian
   when: ansible_os_family in targets
 
-- name: (UltraStack) Include UltraStack configuration
-  include: ultrastack.yml
+- name: (UltraStack) Include UltraStack vars
+  include_vars: ultrastack.yml
   when:
     - use_ultrastack is defined
     - use_ultrastack
 
-- name: (Let's Encrypt) Add Apache to Let's Encrypt services
+- name: Set Apache core facts
+  set_fact:
+    apache_daemon: "{{ apache_daemon | default('httpd') }}"
+    apache_group: "{{ apache_group | default('apache') }}"
+    apache_name: "{{ apache_name | default('httpd') }}"
+    apache_user: "{{ apache_user | default('apache') }}"
+    apache_port_http: "{{ apache_port_http | default(80) }}"
+    apache_port_https: "{{ apache_port_https | default(443) }}"
+
+- name: Check variable 'apache_daemon'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_daemon': '{{ apache_daemon }}'
+
+      'apache_daemon' must be a non-null string.
+  failed_when: >-
+    apache_daemon is not string
+    or apache_daemon == 0
+
+- name: Check variable 'apache_group'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_group': '{{ apache_group }}'
+
+      'apache_group' must be a non-null string.
+  failed_when: >-
+    apache_group is not string
+    or apache_group == 0
+
+- name: Check variable 'apache_name'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_name': '{{ apache_name }}'
+
+      'apache_name' must be a non-null string.
+  failed_when: >-
+    apache_name is not string
+    or apache_name == 0
+
+- name: Check variable 'apache_user'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_user': '{{ apache_user }}'
+
+      'apache_user' must be a non-null string.
+  failed_when: >-
+    apache_user is not string
+    or apache_user == 0
+
+- name: Check variable 'apache_port_http'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_port_http': '{{ apache_port_http }}'
+
+      'apache_port_http' must be a number between 1-65535.
+  failed_when: >-
+    apache_port_http|int < 1
+    or apache_port_http|int > 65535
+
+- name: Check variable 'apache_port_https'
+  fail:
+    msg: |
+      Invalid value for variable 'apache_port_https': '{{ apache_port_https }}'
+
+      'apache_port_https' must be a number between 1-65535.
+  failed_when: >-
+    apache_port_https|int < 1
+    or apache_port_https|int > 65535
+
+- name: Set Apache config facts
+  set_fact:
+    apache_config: >-
+      {{ apache_config |
+      default("/etc/{{ apache_name }}/conf/{{ apache_name }}.conf") }}
+    apache_config_path: >-
+      {{ apache_config_path |
+      default("/etc/{{ apache_name }}/conf.d") }}
+    apache_config_ports: >-
+      {{ apache_config_ports |
+      default("{{ apache_config_path }}/ssl.conf") }}
+    apache_config_site_path: >-
+      {{ apache_config_site_path |
+      default("{{ apache_config_path }}") }}
+    apache_modules_path: >-
+      {{ apache_modules_path |
+      default("/etc/{{ apache_name }}/modules") }}
+    apache_modules_config_path: >-
+      {{ apache_modules_config_path |
+      default("/etc/{{ apache_name }}/conf.modules.d") }}
+    apache_packages: >-
+      {{ apache_packages |
+      default(["httpd", "httpd-tools", "mod_ssl"]) }}
+
+- name: (Let's Encrypt) Add Apache to certbot_stop_services
   set_fact:
     certbot_stop_services: "{{ certbot_stop_services + [apache_name] }}"
   when:
-    - use_letsencrypt is defined
-    - use_letsencrypt
     - certbot_stop_services is defined
     - apache_name not in certbot_stop_services
 
-- name: (Let's Encrypt) Initialize Let's Encrypt services with Apache
+- name: (Let's Encrypt) Create certbot_stop_services with Apache
   set_fact:
     certbot_stop_services:
       - "{{ apache_name }}"
   when:
-    - use_letsencrypt is defined
-    - use_letsencrypt
     - certbot_stop_services is not defined
-
-- name: (Apache) Set and sanitize Apache core facts
-  set_fact:
-    apache_name: >-
-      {{ apache_name
-      if apache_name is defined
-      and apache_name is string
-      and apache_name != 0
-      else "httpd" }}
-    apache_daemon: >-
-      {{ apache_daemon
-      if apache_daemon is defined
-      and apache_daemon is string
-      and apache_daemon != 0
-      else "httpd" }}
-
-    apache_user: >-
-      {{ apache_user
-      if apache_user is defined
-      and apache_user is string
-      and apache_user != 0
-      else "apache" }}
-    apache_group: >-
-      {{ apache_group
-      if apache_group is defined
-      and apache_group is string
-      and apache_group != 0
-      else "apache" }}
-
-    apache_port: >-
-      {{ apache_port
-      if apache_port is defined
-      and apache_port is number
-      and apache_port > 0
-      else 80 }}
-    apache_secure_port: >-
-      {{ apache_secure_port
-      if apache_secure_port is defined
-      and apache_secure_port is number
-      and apache_secure_port > 0
-      else 443 }}
-
-- name: (Apache) Set and sanitize Apache configuration facts
-  set_fact:
-    apache_config: >-
-      {{ apache_config
-      if apache_config is defined
-      and apache_config is string
-      and apache_config != 0
-      else "/etc/{{ apache_name }}/conf/{{ apache_name }}.conf" }}
-    apache_config_path: >-
-      {{ apache_config_path
-      if apache_config_path is defined
-      and apache_config_path is string
-      and apache_config_path != 0
-      else "/etc/{{ apache_name }}/conf.d" }}
-    apache_config_ports: >-
-      {{ apache_config_ports
-      if apache_config_ports is defined
-      and apache_config_ports is string
-      and apache_config_ports != 0
-      else "{{ apache_config_path }}/ssl.conf" }}
-    apache_config_site_path: >-
-      {{ apache_config_site_path
-      if apache_config_site_path is defined
-      and apache_config_site_path is string
-      and apache_config_site_path != 0
-      else "{{ apache_config_path }}" }}
-
-    apache_modules_path: >-
-      {{ apache_modules_path
-      if apache_modules_path is defined
-      and apache_modules_path is string
-      and apache_modules_path != 0
-      else "/etc/{{ apache_name }}/modules" }}
-    apache_modules_config_path: >-
-      {{ apache_modules_config_path
-      if apache_modules_config_path is defined
-      and apache_modules_config_path is string
-      and apache_modules_config_path != 0
-      else "/etc/{{ apache_name }}/conf.modules.d" }}
-
-    apache_packages: >-
-      {{ apache_packages
-      if apache_packages is defined
-      and apache_packages is iterable
-      and apache_packages | length > 0
-      else ["httpd", "httpd-tools", "mod_ssl"] }}
