@@ -24,8 +24,8 @@ Available variables are listed below with their default values (you can also see
 | apache_daemon | Default: `httpd`
 | apache_user | Default: `apache`
 | apache_group | Default: `apache`
-| apache_port | Default: `80`
-| apache_secure_port | Default: `443`
+| apache_port_http | Default: `80`
+| apache_port_https | Default: `443`
 | apache_config | Default: `/etc/{{ apache_name }}/conf/{{ apache_name }}.conf`
 | apache_config_path | Default: `/etc/{{ apache_name }}/conf.d`
 | apache_config_ports | Default: `{{ apache_config_path }}/ssl.conf`
