@@ -101,10 +101,10 @@
 
 - name: Include systemd restart configuation
   include: systemd.yml
-  when:
-    - systemd_restart is defined
-    - systemd_restart
-    - systemd_restart_setting is defined
+  when:  >-
+    ( apache_systemd_restart|default(False)
+    or systemd_restart|default(False) )
+    and systemd_restart_setting is defined
 
 - name: Start and enable Apache service
   service:

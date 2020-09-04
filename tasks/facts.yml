@@ -95,7 +95,8 @@
     'on-watchdog', 'on-abort', 'always']
     or systemd_restart_setting is not string
     or systemd_restart_setting == 0)
-    and systemd_restart
+    and (apache_systemd_restart
+    or systemd_restart)
 
 - name: Set Apache config facts
   set_fact:
