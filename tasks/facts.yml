@@ -82,6 +82,21 @@
     apache_port_https|int < 1
     or apache_port_https|int > 65535
 
+- name: Check variable 'systemd_restart_setting'
+  fail:
+    msg: |
+      Invalid value for variable 'systemd_restart_setting': '{{ systemd_restart_setting }}'
+
+      'systemd_restart_setting' must be one of the following:
+      no, on-success, on-failure, on-abnormal, on-watchdog, on-abort, always.
+  failed_when: >-
+    (systemd_restart_setting not in
+    ['no', 'on-success', 'on-failure', 'on-abnormal',
+    'on-watchdog', 'on-abort', 'always']
+    or systemd_restart_setting is not string
+    or systemd_restart_setting == 0)
+    and systemd_restart
+
 - name: Set Apache config facts
   set_fact:
     apache_config: >-
