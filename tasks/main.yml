@@ -99,22 +99,8 @@
     - rewrite
     - ssl
 
-- name: Creates service directory
-  file:
-    path: /etc/systemd/system/{{ apache_daemon }}.service.d
-    state: directory
-  when:
-    - systemd_restart is defined
-    - systemd_restart
-
-- name: Create service file
-  template:
-    src: etc/systemd/restart.conf.j2
-    dest: /etc/systemd/system/{{ apache_daemon }}.service.d/restart.conf
-    owner: root
-    group: root
-    mode: 0600
-  notify: restart apache
+- name: Include systemd restart configuation
+  include: systemd.yml
   when:
     - systemd_restart is defined
     - systemd_restart

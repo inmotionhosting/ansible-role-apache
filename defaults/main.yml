@@ -22,5 +22,5 @@ apache_packages:
 
 use_letsencrypt: false
 use_ultrastack: false
-systemd_restart: false
+systemd_restart: true
 systemd_restart_setting: on-failure

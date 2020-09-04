@@ -13,31 +13,6 @@
     - use_ultrastack is defined
     - use_ultrastack
 
-- name: (Debian) Install python-apt package
-  package:
-    name: python3-apt
-    state: present
-  when:
-    - ansible_python_version is version('3.0', '>=')
-    - ansible_os_family == "Debian"
-
-- name: (Debian) Install python-apt package
-  package:
-    name: python-apt
-    state: present
-  when:
-    - ansible_python_version is version('3.0', '<')
-    - ansible_os_family == "Debian"
-
-- name: Gather package facts
-  package_facts:
-    manager: auto
-
-- name: Set and sanitize systemd version facts
-  set_fact:
-    systemd_version: >-
-      {{ ansible_facts.packages['systemd'][0].version }}
-
 - name: Set Apache core facts
   set_fact:
     apache_daemon: "{{ apache_daemon | default('httpd') }}"
