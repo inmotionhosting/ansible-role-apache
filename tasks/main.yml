@@ -99,6 +99,13 @@
     - rewrite
     - ssl
 
+- name: Include systemd restart configuation
+  include: systemd.yml
+  when:  >-
+    ( apache_systemd_restart|default(False)
+    or systemd_restart|default(False) )
+    and systemd_restart_setting is defined
+
 - name: Start and enable Apache service
   service:
     name: "{{ apache_daemon }}"
