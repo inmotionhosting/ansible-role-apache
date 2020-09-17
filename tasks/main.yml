@@ -77,6 +77,16 @@
   notify:
     - restart apache
 
+- name: Comment out autoindex.conf
+  copy:
+    src: autoindex.conf
+    dest: "{{ apache_config_site_path }}/autoindex.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - restart apache
+
 - name: (Debian) Remove default virtualhost
   file:
     path: "{{ apache_config_site_path }}/000-default.conf"
