@@ -52,8 +52,10 @@
     or systemd_restart_setting is not string
     or systemd_restart_setting == 0
   when: >-
-    apache_systemd_restart
-    or systemd_restart
+    (apache_systemd_restart is defined
+    and apache_systemd_restart)
+    or (systemd_restart is defined
+    and systemd_restart)
 
 - name: (Let's Encrypt) Add Apache to certbot_stop_services
   set_fact:
