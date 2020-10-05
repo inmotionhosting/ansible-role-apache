@@ -23,7 +23,7 @@
   when: >-
     lookup('vars', item) is not string
     or lookup('vars', item) == 0
-  with_items: "{{ required_strings }}"
+  with_items: "{{ apache_required_strings }}"
 
 - name: Check required Apache variables (integers)
   fail:
@@ -35,7 +35,7 @@
   when: >-
     lookup('vars', item)|int < 1
     or lookup('vars', item)|int > 65535
-  with_items: "{{ required_ints }}"
+  with_items: "{{ apache_required_ints }}"
 
 - name: Check variable 'systemd_restart_setting'
   fail:
