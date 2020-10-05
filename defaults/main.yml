@@ -1,6 +1,6 @@
 # defaults/main.yml
 
-required_strings:
+apache_required_strings:
   - apache_daemon
   - apache_group
   - apache_name
@@ -12,7 +12,7 @@ required_strings:
   - apache_modules_path
   - apache_modules_config_path
 
-required_ints:
+apache_required_ints:
   - apache_port_http
   - apache_port_https
 
