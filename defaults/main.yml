@@ -1,21 +1,5 @@
 # defaults/main.yml
 
-apache_required_strings:
-  - apache_daemon
-  - apache_group
-  - apache_name
-  - apache_user
-  - apache_config
-  - apache_config_path
-  - apache_config_ports
-  - apache_config_site_path
-  - apache_modules_path
-  - apache_modules_config_path
-
-apache_required_ints:
-  - apache_port_http
-  - apache_port_https
-
 apache_daemon: httpd
 apache_group: apache
 apache_name: httpd
