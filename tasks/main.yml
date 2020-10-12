@@ -111,7 +111,7 @@
 
 - name: Include systemd restart configuation
   include: systemd.yml
-  when:  >-
+  when: >-
     ( apache_systemd_restart|default(False)
     or systemd_restart|default(False) )
     and systemd_restart_setting is defined
