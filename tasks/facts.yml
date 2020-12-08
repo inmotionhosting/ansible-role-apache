@@ -1,17 +1,14 @@
 # tasks/facts.yml
 
 - name: Include os_family vars
-  include_vars: "{{ ansible_os_family }}.yml"
-  vars:
-    targets:
-      - Debian
-  when: ansible_os_family in targets
+  include_vars: Debian.yml
+  when: ansible_os_family == "Debian"
 
 - name: (UltraStack) Include UltraStack vars
   include_vars: ultrastack.yml
   when:
     - use_ultrastack is defined
-    - use_ultrastack
+    - use_ultrastack|bool
 
 - name: Set lists of required variables
   set_fact:
