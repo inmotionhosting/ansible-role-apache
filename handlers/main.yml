@@ -1,5 +1,4 @@
-# handlers/main.yml
-
+---
 - name: restart apache
   systemd:
     state: restarted
