@@ -18,15 +18,14 @@ galaxy_info:
         - buster
     - name: Ubuntu
       versions:
-        - xenial
         - bionic
         - focal
 
   galaxy_tags:
-    - web
-    - server
     - apache
     - apache2
     - httpd
+    - server
+    - web
 
 dependencies: []
