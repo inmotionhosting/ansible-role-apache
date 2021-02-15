@@ -1,14 +1,15 @@
-# tasks/facts.yml
-
+---
 - name: Include os_family vars
   include_vars: Debian.yml
   when: ansible_os_family == "Debian"
 
-- name: (UltraStack) Include UltraStack vars
-  include_vars: ultrastack.yml
+- name: (UltraStack) Update Apache ports
+  set_fact:
+    apache_port_http: 8080
+    apache_port_https: 8443
   when:
     - use_ultrastack is defined
-    - use_ultrastack|bool
+    - use_ultrastack
 
 - name: Set lists of required variables
   set_fact:
@@ -57,19 +58,29 @@
       Invalid value for variable 'systemd_restart_setting': '{{ systemd_restart_setting }}'
 
       Supported types  : String
-      Supported values : "no", "on-success", "on-failure", "on-abnormal",
-                         "on-watchdog", "on-abort", "always"
+      Supported values : "always"
+                         "no"
+                         "on-abort"
+                         "on-abnormal"
+                         "on-failure"
+                         "on-success"
+                         "on-watchdog"
   failed_when: >-
-    systemd_restart_setting not in
-    ['no', 'on-success', 'on-failure', 'on-abnormal',
-    'on-watchdog', 'on-abort', 'always']
+    systemd_restart_setting not in supported_values
     or systemd_restart_setting is not string
     or systemd_restart_setting == 0
+  vars:
+    supported_values:
+      - "always"
+      - "no"
+      - "on-abort"
+      - "on-abnormal"
+      - "on-failure"
+      - "on-success"
+      - "on-watchdog"
   when: >-
-    (apache_systemd_restart is defined
-    and apache_systemd_restart)
-    or (systemd_restart is defined
-    and systemd_restart)
+    (apache_systemd_restart is defined and apache_systemd_restart)
+    or (systemd_restart is defined and systemd_restart)
 
 - name: (Let's Encrypt) Add Apache to certbot_stop_services
   set_fact:
@@ -82,5 +93,4 @@
   set_fact:
     certbot_stop_services:
       - "{{ apache_name }}"
-  when:
-    - certbot_stop_services is not defined
+  when: certbot_stop_services is not defined
