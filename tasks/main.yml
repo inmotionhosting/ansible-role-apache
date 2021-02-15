@@ -1,5 +1,4 @@
-# tasks/main.yml
-
+---
 - name: Include facts
   include: facts.yml
 
@@ -15,6 +14,16 @@
   package:
     name: "{{ apache_packages }}"
     state: present
+
+- name: Delete Apache "hello world" configuration
+  file:
+    path:
+    state: absent
+  notify:
+    - restart apache
+  with_items:
+    - "{{ apache_config_site_path }}/autoindex.conf"
+    - "{{ apache_config_site_path }}/welcome.conf"
 
 - name: Ensure Apache group exists
   group:
@@ -67,26 +76,6 @@
     replace: "\tListen {{ apache_port_https }}"
   when: ansible_os_family == "Debian"
 
-- name: Comment out welcome.conf
-  copy:
-    src: welcome.conf
-    dest: "{{ apache_config_site_path }}/welcome.conf"
-    owner: root
-    group: root
-    mode: "0644"
-  notify:
-    - restart apache
-
-- name: Comment out autoindex.conf
-  copy:
-    src: autoindex.conf
-    dest: "{{ apache_config_site_path }}/autoindex.conf"
-    owner: root
-    group: root
-    mode: "0644"
-  notify:
-    - restart apache
-
 - name: (Debian) Remove default virtualhost
   file:
     path: "{{ apache_config_site_path }}/000-default.conf"
@@ -109,12 +98,19 @@
     - rewrite
     - ssl
 
-- name: Include systemd restart configuation
+- name: Configure httpd mpm module
+  template:
+    src: etc/httpd/modules.d/00-mpm.conf.j2
+    dest: "{{ apache_modules_config_path }}/00-mpm.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart apache
+
+- name: Include systemd restart configuration
   include: systemd.yml
-  when: >-
-    ( apache_systemd_restart|default(False)
-    or systemd_restart|default(False) )
-    and systemd_restart_setting is defined
+  when: ansible_service_mgr == "systemd"
 
 - name: Start and enable Apache service
   service:
