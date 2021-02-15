@@ -1,4 +1,4 @@
-name: Ansible-Role-Apache CI Testing
+name: Ansible Molecule Pipeline
 
 on:
   push:
