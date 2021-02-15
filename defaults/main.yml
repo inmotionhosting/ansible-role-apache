@@ -1,5 +1,4 @@
-# defaults/main.yml
-
+---
 apache_daemon: httpd
 apache_group: apache
 apache_name: httpd
@@ -20,7 +19,11 @@ apache_packages:
   - httpd-tools
   - mod_ssl
 
-use_letsencrypt: false
-use_ultrastack: false
 apache_systemd_restart: false
 systemd_restart_setting: on-failure
+
+#
+# mpm.conf
+#
+
+mpm_conf_max_request_workers: 250
