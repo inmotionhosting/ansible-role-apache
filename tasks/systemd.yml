@@ -5,7 +5,7 @@
     state: present
   when:
     - ansible_python_version is version('3.0', '>=')
-    - ansible_os_family == "Debian"
+    - ansible_os_family|lower == "debian"
 
 - name: (Debian) Install python-apt package
   package:
@@ -13,7 +13,7 @@
     state: present
   when:
     - ansible_python_version is version('3.0', '<')
-    - ansible_os_family == "Debian"
+    - ansible_os_family|lower == "debian"
 
 - name: Gather package facts
   package_facts:

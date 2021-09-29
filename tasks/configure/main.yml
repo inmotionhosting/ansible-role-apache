@@ -1,0 +1,25 @@
+---
+- name: Assign Apache to specified user in config
+  lineinfile:
+    path: "{{ apache_config }}"
+    regexp: "^User "
+    line: "User {{ apache_user }}"
+
+- name: Assign Apache to specified group in config
+  lineinfile:
+    path: "{{ apache_config }}"
+    regexp: "^Group "
+    line: "Group {{ apache_group }}"
+
+- name: ({{ ansible_os_family }}) Configure Apache
+  include_tasks: "configure/{{ ansible_os_family|lower }}.yml"
+
+- name: Configure httpd mpm module
+  template:
+    src: etc/httpd/modules.d/00-mpm.conf.j2
+    dest: "{{ apache_modules_config_path }}/00-mpm.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart apache

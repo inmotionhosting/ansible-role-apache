@@ -1,7 +1,7 @@
 ---
 - name: Include os_family vars
   include_vars: Debian.yml
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family|lower == "debian"
 
 - name: (UltraStack) Update Apache ports
   set_fact:
