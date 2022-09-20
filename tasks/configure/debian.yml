@@ -20,7 +20,7 @@
   when: ansible_os_family|lower == "debian"
 
 - name: (Debian) Enable Apache modules
-  apache2_module:
+  community.general.apache2_module:
     name: "{{ item }}"
     state: present
     ignore_configcheck: true
