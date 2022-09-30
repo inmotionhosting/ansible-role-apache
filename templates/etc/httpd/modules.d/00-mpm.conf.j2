@@ -9,7 +9,7 @@ LoadModule mpm_event_module {{ apache_modules_path }}/mod_mpm_event.so
 {% endif %}
 
 <IfModule mpm_event_module>
-    ServerLimit             {{ mpm_conf_max_request_workers|int / 25 }}
+    ServerLimit             {{ mpm_conf_max_request_workers | int / 25 }}
     StartServers            5
     MinSpareThreads         75
     MaxSpareThreads         250
