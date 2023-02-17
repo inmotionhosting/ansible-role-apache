@@ -34,6 +34,7 @@ Available variables are listed below with their default values (you can also see
 | apache_modules_path        | Default: `/etc/{{ apache_name }}/modules`
 | apache_modules_config_path | Default: `/etc/{{ apache_name }}/conf.modules.d`
 | apache_packages            | The list of Apache packages to install
+| apache_systemd_restart     | Default: `false`
 
 ## Example Playbook
 ```yaml
