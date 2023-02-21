@@ -41,7 +41,10 @@
 
 - name: Include systemd restart configuration
   include: systemd.yml
-  when: ansible_service_mgr == "systemd"
+  when: >-
+    ( apache_systemd_restart|default(False)
+    or systemd_restart|default(False) )
+    and systemd_restart_setting is defined  
 
 - name: Start and enable Apache service
   service:
