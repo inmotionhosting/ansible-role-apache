@@ -23,3 +23,13 @@
     mode: 0644
   notify:
     - restart apache
+
+- name: Create Apache /server-status config
+  template:
+    src: etc/httpd/conf.d/status.conf.j2
+    dest: "{{ apache_config_site_path }}/status.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart apache
