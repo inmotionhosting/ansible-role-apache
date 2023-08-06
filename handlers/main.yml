@@ -1,6 +1,6 @@
 ---
-- name: restart apache
-  systemd:
+- name: Restart apache
+  ansible.builtin.systemd:
     state: restarted
-    daemon_reload: yes
+    daemon_reload: true
     name: "{{ apache_daemon }}"

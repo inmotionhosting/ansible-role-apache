@@ -1,6 +1,6 @@
 ---
 - name: (Debian) Install python-apt package
-  package:
+  ansible.builtin.package:
     name: python3-apt
     state: present
   when:
@@ -8,7 +8,7 @@
     - ansible_os_family|lower == "debian"
 
 - name: (Debian) Install python-apt package
-  package:
+  ansible.builtin.package:
     name: python-apt
     state: present
   when:
@@ -16,24 +16,27 @@
     - ansible_os_family|lower == "debian"
 
 - name: Gather package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
 
 - name: Set and sanitize systemd version facts
-  set_fact:
+  ansible.builtin.set_fact:
     systemd_version: >-
       {{ ansible_facts.packages['systemd'][0].version }}
 
 - name: Creates service directory
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/{{ apache_daemon }}.service.d
     state: directory
+    owner: root
+    group: root
+    mode: "0750"
 
 - name: Create service file
-  template:
+  ansible.builtin.template:
     src: etc/systemd/restart.conf.j2
     dest: /etc/systemd/system/{{ apache_daemon }}.service.d/restart.conf
     owner: root
     group: root
-    mode: 0600
-  notify: restart apache
+    mode: "0600"
+  notify: Restart apache

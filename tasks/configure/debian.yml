@@ -1,20 +1,20 @@
 ---
 - name: (Debian) Bind Apache to specified HTTP port
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ apache_config_ports }}"
     regexp: "^Listen 80$"
     line: "Listen {{ apache_port_http }}"
   when: ansible_os_family|lower == "debian"
 
 - name: (Debian) Bind Apache to specified HTTPS port
-  replace:
+  ansible.builtin.replace:
     path: "{{ apache_config_ports }}"
     regexp: "^\tListen 443$"
     replace: "\tListen {{ apache_port_https }}"
   when: ansible_os_family|lower == "debian"
 
 - name: (Debian) Remove default virtualhost
-  file:
+  ansible.builtin.file:
     path: "{{ apache_config_site_path }}/000-default.conf"
     state: absent
   when: ansible_os_family|lower == "debian"
@@ -27,7 +27,7 @@
   failed_when:
     - apache_modules.rc is defined
     - apache_modules.rc > 0
-  notify: restart apache
+  notify: Restart apache
   register: apache_modules
   when: ansible_os_family|lower == "debian"
   with_items:
