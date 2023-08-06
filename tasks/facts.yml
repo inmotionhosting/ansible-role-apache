@@ -1,10 +1,10 @@
 ---
 - name: Include os_family vars
-  include_vars: Debian.yml
+  ansible.builtin.include_vars: Debian.yml
   when: ansible_os_family|lower == "debian"
 
 - name: (UltraStack) Update Apache ports
-  set_fact:
+  ansible.builtin.set_fact:
     apache_port_http: 8080
     apache_port_https: 8443
   when:
@@ -12,7 +12,7 @@
     - use_ultrastack
 
 - name: Set lists of required variables
-  set_fact:
+  ansible.builtin.set_fact:
     apache_required_strings:
       - apache_daemon
       - apache_group
@@ -29,7 +29,7 @@
       - apache_port_https
 
 - name: Check required Apache variables (strings)
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable for '{{ item }}': {{ lookup('vars', item) }}
 
@@ -41,7 +41,7 @@
   with_items: "{{ apache_required_strings }}"
 
 - name: Check required Apache variables (integers)
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable for '{{ item }}': {{ lookup('vars', item) }}
 
@@ -53,7 +53,7 @@
   with_items: "{{ apache_required_ints }}"
 
 - name: Check variable 'systemd_restart_setting'
-  fail:
+  ansible.builtin.fail:
     msg: |
       Invalid value for variable 'systemd_restart_setting': '{{ systemd_restart_setting }}'
 
@@ -83,14 +83,14 @@
     or (systemd_restart is defined and systemd_restart)
 
 - name: (Let's Encrypt) Add Apache to certbot_stop_services
-  set_fact:
+  ansible.builtin.set_fact:
     certbot_stop_services: "{{ certbot_stop_services + [apache_name] }}"
   when:
     - certbot_stop_services is defined
     - apache_name not in certbot_stop_services
 
 - name: (Let's Encrypt) Create certbot_stop_services with Apache
-  set_fact:
+  ansible.builtin.set_fact:
     certbot_stop_services:
       - "{{ apache_name }}"
   when: certbot_stop_services is not defined
