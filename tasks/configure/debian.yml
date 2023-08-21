@@ -9,8 +9,8 @@
 - name: (Debian) Bind Apache to specified HTTPS port
   ansible.builtin.replace:
     path: "{{ apache_config_ports }}"
-    regexp: "^\tListen 443$"
-    replace: "\tListen {{ apache_port_https }}"
+    regexp: "Listen 443$"
+    replace: "Listen {{ apache_port_https }}"
   when: ansible_os_family|lower == "debian"
 
 - name: (Debian) Remove default virtualhost

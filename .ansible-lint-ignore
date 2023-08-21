@@ -1,3 +1,0 @@
-# This file contains ignores rule violations for ansible-lint
-.github/workflows/main.yml yaml[truthy]
-tasks/configure/debian.yml no-tabs
