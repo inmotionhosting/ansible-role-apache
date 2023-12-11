@@ -1,6 +1,7 @@
 ---
 - name: Include facts
   ansible.builtin.include_tasks: facts.yml
+  tags: siteurl
 
 - name: (Ubuntu) Update APT cache
   ansible.builtin.apt:
