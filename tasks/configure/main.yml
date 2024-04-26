@@ -33,3 +33,9 @@
     mode: "0644"
   notify:
     - Restart apache
+
+- name: Set Apache Timeout Directive
+  ansible.builtin.lineinfile:
+    path: "{{ apache_config }}"
+    regexp: '^Timeout\s+\d+'
+    line: "Timeout {{ apache_timeout }}"

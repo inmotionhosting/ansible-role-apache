@@ -6,6 +6,7 @@ apache_user: apache
 
 apache_port_http: 80
 apache_port_https: 443
+apache_timeout: 300
 
 apache_config: /etc/{{ apache_name }}/conf/{{ apache_name }}.conf
 apache_config_path: /etc/{{ apache_name }}/conf.d
